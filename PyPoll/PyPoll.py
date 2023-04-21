@@ -1,7 +1,7 @@
 import os
 import csv
 
-
+outfile = os.path.join("Resources", "election_analysis.txt")
 csvpath = os.path.join("Resources", "election_data.csv")
 
 # Total vote counter
@@ -27,41 +27,47 @@ with open(csvpath) as csvfile:
                candidate_options.append(name)
                candidate_votes[name] = 0
 
-               candidate_votes[name] = candidate_votes[name] + 1
+          candidate_votes[name] = candidate_votes[name] + 1
           
-with open(outfile, "w") as file:
+with open(outfile, "w") as txt_file:
+
+    # Print final vote
+    election_results = (
+         f"\n\nElection Results\n"
+         f"---------------------\n"
+         f"Total Votes: {total_votes}\n"
+         f"-------------------------\n"
+    )
+    print(election_results)
+
+    # Save to txt file:
+    txt_file.write(election_results)
+
     for candidate in candidate_votes:
+        # Find the vote count and percentage
         votes = candidate_votes[candidate]
-        percent = votes / total_votes * 100
+        percent = float(votes) / float(total_votes) * 100
 
-    if (votes > win_count):
-         win_count = votes
-         winner = candidate
+        # Determine winnig candidate and vote count
+        if (votes > win_count):
+            win_count = votes
+            winner = candidate
 
-    # Print each candidates vote count and percentage
-    output = f"{candidate}: {percent:.3f}% ({votes})\n"
+        # Print each candidates vote count and percentage
+        output = f"{candidate}: {percent:.3f}% ({votes})\n"
+        print(output)
     
+        # Save each candidates data to txt file
+        txt_file.write(output)
 
-  
-# Print the Analysis
-print("-------------------------")
-print("Election Results")   
-print("-------------------------")
-print("Total Votes :" + str(total_votes)) 
-print("-------------------------")
-for i in range(len(candidate_options)):
-            print(candidate_options[i] + ": " + str(candidate_votes[name]) +"% (" + str(total_votes)+ ")")
-print("-------------------------")
-print("Winner: " + winner)
+    # Print the winner
+    winning_candidate = (
+         f"-------------------\n"
+         f"Winner: {winner}\n"
+         f"-------------------------------"
+    )
+    print(winning_candidate)
 
+    # Save winner to txt file
+    txt_file.write(winning_candidate)
 
-# Export Analysis to .txt file
-with open('election_results.txt', 'w') as outfile:
-    outfile.write("Election Results\n")
-    outfile.write("---------------------------------------\n")
-    outfile.write("Total Vote: " + str(total_votes) + "\n")
-    outfile.write("---------------------------------------\n")
-    for i in range(len(set(candidate_options))):
-        outfile.write(candidate_options[i] + ": " + str(candidate_votes[name]) +"% (" + str(total_votes) + ")\n")
-    outfile.write("---------------------------------------\n")
-    outfile.write("Winner: " + winner + "\n")
